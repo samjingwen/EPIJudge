@@ -10,6 +10,7 @@ using std::default_random_engine;
 using std::random_device;
 using std::uniform_int_distribution;
 using std::vector;
+
 int ZeroOneRandom() {
   default_random_engine gen((random_device())());
   uniform_int_distribution<int> dis(0, 1);
@@ -17,9 +18,21 @@ int ZeroOneRandom() {
 }
 
 int UniformRandom(int lower_bound, int upper_bound) {
-  // TODO - you fill in here.
-  return 0;
+  int outcomes = upper_bound - lower_bound + 1;
+  int result = 0;
+  do {
+    result = 0;
+    for (int i = 0; (1 << i) < outcomes; ++i) {
+      result <<= 1;
+      int bit = ZeroOneRandom();
+      result += bit;
+    }
+    result += lower_bound;
+  } while (result > upper_bound);
+
+  return result;
 }
+
 bool UniformRandomRunner(TimedExecutor& executor, int lower_bound,
                          int upper_bound) {
   using namespace test_framework;
